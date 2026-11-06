@@ -1,0 +1,15 @@
+# Secrets and machine-specific configuration must never enter the source upload.
+.env*
+.git/
+.agents/
+.codex/
+.aws/
+.vercel/
+node_modules/
+.next/
+coverage/
+test-results/
+*.tsbuildinfo
+*.log
+docs/
+Captura*.png

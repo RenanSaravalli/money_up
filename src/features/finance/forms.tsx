@@ -208,12 +208,25 @@ function DeleteAction({
   );
 }
 
+// The normal flow keeps its original description requirement. The quick flow
+// shares financial validation and persistence, but allows an empty description.
+const normalTransactionSchema = transactionSchema.refine(
+  (transaction) => transaction.description.length >= 2,
+  { path: ["description"], message: "Use pelo menos 2 caracteres." },
+);
+
+function QuickEntryForm() {
+  return <TransactionForm quick />;
+}
+
 function TransactionForm({
   value,
   initialKind,
+  quick = false,
 }: {
   value?: Transaction;
   initialKind?: TransactionKind;
+  quick?: boolean;
 }) {
   const { data, setEditor } = useFinance();
   const { save, busy, error } = useSave();
@@ -225,15 +238,17 @@ function TransactionForm({
     unknown,
     z.output<typeof transactionSchema>
   >({
-    resolver: zodResolver(transactionSchema),
-    mode: "onChange",
+    resolver: zodResolver(quick ? transactionSchema : normalTransactionSchema),
+    mode: quick ? "onChange" : "onSubmit",
     defaultValues: {
       id,
-      kind: value?.kind ?? initialKind ?? "expense",
+      kind: value?.kind ?? initialKind ?? (quick ? "" : "expense"),
       amount: value ? moneyInput(value.amount) : "",
       description: value?.description ?? "",
       categoryId: value?.categoryId ?? "",
-      accountId: value?.accountId ?? "",
+      accountId:
+        value?.accountId ??
+        (quick ? "" : (data.accounts.find((a) => a.active)?.id ?? "")),
       destinationAccountId: value?.destinationAccountId ?? "",
       occurredAt: value ? localDateTime(value.occurredAt) : localDateTime(),
       notes: value?.notes ?? "",
@@ -316,10 +331,16 @@ function TransactionForm({
   return (
     <>
       <DialogTitle className="dialog-title">
-        {value ? "Editar movimentação" : "Nova movimentação"}
+        {quick
+          ? "Lançamento rápido"
+          : value
+            ? "Editar movimentação"
+            : "Nova movimentação"}
       </DialogTitle>
       <DialogDescription className="dialog-description">
-        Cada movimento deixa seu dinheiro mais claro.
+        {quick
+          ? "Conte o que aconteceu e revise os campos antes de confirmar."
+          : "Cada movimento deixa seu dinheiro mais claro."}
       </DialogDescription>
       <form
         onSubmit={form.handleSubmit(() =>
@@ -327,6 +348,7 @@ function TransactionForm({
         )}
         className="finance-form"
         onChange={(event) => {
+          if (!quick) return;
           const name = (event.target as unknown as HTMLInputElement)
             .name as keyof QuickDraft;
           if (
@@ -344,9 +366,9 @@ function TransactionForm({
         }}
         noValidate
       >
-        {!value && (
+        {quick && (
           <div className="quick-entry">
-            <Field label="Lançamento rápido (opcional)">
+            <Field label="O que você quer registrar?">
               <textarea
                 value={quickText}
                 placeholder="Ex.: Gastei 29,3"
@@ -387,19 +409,20 @@ function TransactionForm({
               key={item.key}
               className={cn(kind === item.key && "active")}
               onClick={() => {
-                manual.current.kind = true;
-                form.setValue("kind", item.key, { shouldValidate: true });
+                if (quick) manual.current.kind = true;
+                form.setValue("kind", item.key, { shouldValidate: quick });
                 if (
+                  !quick ||
                   !data.categories.some(
                     (c) =>
                       c.id === form.getValues("categoryId") &&
                       c.kind === item.key,
                   )
                 )
-                  form.setValue("categoryId", "", { shouldValidate: true });
-                if (item.key !== "transfer")
+                  form.setValue("categoryId", "", { shouldValidate: quick });
+                if (!quick || item.key !== "transfer")
                   form.setValue("destinationAccountId", "", {
-                    shouldValidate: true,
+                    shouldValidate: quick,
                   });
               }}
             >
@@ -434,7 +457,10 @@ function TransactionForm({
             />
           </div>
         </Field>
-        <Field label="Descrição (opcional)" error={errors.description?.message}>
+        <Field
+          label={quick ? "Descrição (opcional)" : "Descrição"}
+          error={errors.description?.message}
+        >
           <input
             {...form.register("description")}
             placeholder={
@@ -518,9 +544,15 @@ function TransactionForm({
         )}
         <SaveFooter
           busy={busy}
-          disabled={!ready}
+          disabled={quick && !ready}
           error={error}
-          label={value ? "Salvar alterações" : "Confirmar movimentação"}
+          label={
+            quick
+              ? "Confirmar lançamento rápido"
+              : value
+                ? "Salvar alterações"
+                : "Confirmar movimentação"
+          }
         >
           {value && (
             <DeleteAction
@@ -1023,6 +1055,8 @@ export function FinanceForms() {
       >
         {editor?.type === "transaction" ? (
           <TransactionForm value={editor.value} initialKind={editor.kind} />
+        ) : editor?.type === "quick-entry" ? (
+          <QuickEntryForm />
         ) : editor?.type === "account" ? (
           <AccountForm value={editor.value} />
         ) : editor?.type === "card" ? (

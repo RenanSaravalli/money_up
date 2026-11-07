@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   ArrowDownLeft,
   ArrowUpRight,
-  ArrowLeftRight,
+  Zap,
   CreditCard,
   Bell,
   Search,
@@ -150,9 +150,9 @@ export function Dashboard() {
                   action: () => openTransaction("expense"),
                 },
                 {
-                  label: "Transferir",
-                  icon: ArrowLeftRight,
-                  action: () => openTransaction("transfer"),
+                  label: "Lançar rápido",
+                  icon: Zap,
+                  action: () => setEditor({ type: "quick-entry" }),
                 },
                 {
                   label: "Cartões",

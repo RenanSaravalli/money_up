@@ -19,6 +19,7 @@ import type {
 import { FinanceForms } from "@/features/finance/forms";
 export type Editor =
   | { type: "transaction"; kind?: TransactionKind; value?: Transaction }
+  | { type: "quick-entry" }
   | { type: "account"; value?: FinancialAccount }
   | { type: "card"; value?: Card }
   | { type: "category"; value?: Category }

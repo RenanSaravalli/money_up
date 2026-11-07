@@ -24,6 +24,11 @@ const navigation = [
   { href: "/statistics", label: "Estatísticas", icon: ChartNoAxesColumn },
   { href: "/goals", label: "Metas", icon: Flag },
 ];
+const bottomNavigation = [
+  ...navigation.slice(0, 3),
+  { href: "/accounts", label: "Minhas contas", icon: Wallet },
+  navigation[3],
+];
 export function Brand() {
   return (
     <span className="brand">
@@ -131,7 +136,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="page-content">{children}</main>
         <nav className="bottom-navigation" aria-label="Navegação principal">
           <div className="nav-capsule">
-            {navigation.map((n) => (
+            {bottomNavigation.map((n) => (
               <Link
                 key={n.href}
                 href={n.href}
@@ -140,7 +145,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 aria-current={path === n.href ? "page" : undefined}
                 className={cn("bottom-link", path === n.href && "active")}
               >
-                <n.icon size={22} strokeWidth={1.5} />
+                <n.icon size={19} strokeWidth={1.5} />
                 <span className="bottom-active-dot" />
               </Link>
             ))}
@@ -150,7 +155,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => openTransaction()}
             aria-label="Adicionar transação"
           >
-            <Plus size={29} strokeWidth={1.6} />
+            <Plus size={24} strokeWidth={1.6} />
           </button>
         </nav>
       </div>

@@ -136,7 +136,9 @@ export function Statistics() {
                     maxBarSize={64}
                     minPointSize={(value) => ((value ?? 0) > 0 ? 3 : 0)}
                     background={
-                      max === 0n ? { fill: "#232638", radius: 8 } : false
+                      max === 0n
+                        ? { fill: "var(--chart-empty-bar)", radius: 8 }
+                        : false
                     }
                     onClick={(_, index) =>
                       setSelected(selected === index ? null : index)
@@ -146,15 +148,20 @@ export function Statistics() {
                     {chartData.map((_, i) => (
                       <Cell
                         key={i}
-                        fill={selected === i ? "url(#barBlue)" : "#494b5c"}
+                        fill={
+                          selected === i ? "url(#barBlue)" : "var(--chart-bar)"
+                        }
                         cursor="pointer"
                       />
                     ))}
                   </Bar>
                   <defs>
                     <linearGradient id="barBlue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3984ff" />
-                      <stop offset="100%" stopColor="#1d61ec" />
+                      <stop offset="0%" stopColor="var(--chart-blue-top)" />
+                      <stop
+                        offset="100%"
+                        stopColor="var(--chart-blue-bottom)"
+                      />
                     </linearGradient>
                   </defs>
                 </BarChart>

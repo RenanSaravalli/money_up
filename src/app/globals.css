@@ -35,6 +35,10 @@
   --card: #1c1e2d;
   --green: #66d6af;
   --red: #f292a2;
+  --chart-bar: #494b5c;
+  --chart-empty-bar: #232638;
+  --chart-blue-top: #3984ff;
+  --chart-blue-bottom: #1d61ec;
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -46,6 +50,10 @@
   --card: #ffffff;
   --green: #1b8a68;
   --red: #c84f67;
+  --chart-bar: #91c7ff;
+  --chart-empty-bar: #dcecff;
+  --chart-blue-top: #8bcaff;
+  --chart-blue-bottom: #54a5f5;
   color-scheme: light;
 }
 * {
@@ -427,8 +435,8 @@ strong {
   filter: drop-shadow(0 5px 25px #0009);
 }
 .nav-capsule {
-  height: 62px;
-  width: 256px;
+  height: 50px;
+  width: 244px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -441,8 +449,8 @@ strong {
 .bottom-link {
   position: relative;
   color: #d8d9e4;
-  width: 51px;
-  height: 51px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
 }
@@ -467,8 +475,8 @@ strong {
   box-shadow: 0 0 7px #1b69ff;
 }
 .nav-add {
-  width: 62px;
-  height: 62px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: linear-gradient(140deg, #3d87ff, #1254e6);
   display: grid;
@@ -2754,7 +2762,7 @@ strong {
     filter: drop-shadow(0 8px 20px #000c);
   }
   .nav-capsule {
-    height: 64px;
+    height: 50px;
     width: auto;
     flex: 1;
     max-width: 310px;
@@ -2763,13 +2771,13 @@ strong {
     border-radius: 40px;
   }
   .nav-add {
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
     flex-shrink: 0;
   }
   .bottom-link {
-    width: 25%;
-    height: 53px;
+    width: 20%;
+    height: 44px;
   }
   .dashboard-header {
     margin-bottom: 28px;
@@ -3887,9 +3895,11 @@ strong {
 }
 :root[data-theme="light"] .segmented-control button {
   color: #5e6d84;
+  background: #edf1f6;
 }
 :root[data-theme="light"] .segmented-control button.active {
   color: #ffffff;
+  background: linear-gradient(145deg, #3782ff, #1d5de5);
 }
 :root[data-theme="light"] .chart-card {
   background: linear-gradient(150deg, #ffffff, #edf3fb);

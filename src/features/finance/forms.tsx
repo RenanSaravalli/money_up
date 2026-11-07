@@ -1,5 +1,5 @@
 "use client";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -36,6 +36,12 @@ import { localDateTime } from "@/lib/dates";
 import { moneyInput, parseMoney } from "@/lib/money";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import {
+  interpretQuickEntry,
+  mergeQuickDraft,
+  type ManualFields,
+  type QuickDraft,
+} from "@/lib/quick-entry";
 import type {
   FinancialAccount,
   Transaction,
@@ -105,11 +111,13 @@ function useSave() {
 }
 function SaveFooter({
   busy,
+  disabled = false,
   error,
   label = "Salvar",
   children,
 }: {
   busy: boolean;
+  disabled?: boolean;
   error: string;
   label?: string;
   children?: ReactNode;
@@ -127,7 +135,7 @@ function SaveFooter({
         {children}
         <Button
           type="submit"
-          disabled={busy || !configured}
+          disabled={busy || !configured || disabled}
           className="submit-button"
         >
           {busy ? (
@@ -210,20 +218,22 @@ function TransactionForm({
   const { data, setEditor } = useFinance();
   const { save, busy, error } = useSave();
   const [id] = useState(() => value?.id ?? crypto.randomUUID());
+  const [quickText, setQuickText] = useState("");
+  const manual = useRef<ManualFields>({});
   const form = useForm<
     z.input<typeof transactionSchema>,
     unknown,
     z.output<typeof transactionSchema>
   >({
     resolver: zodResolver(transactionSchema),
+    mode: "onChange",
     defaultValues: {
       id,
       kind: value?.kind ?? initialKind ?? "expense",
       amount: value ? moneyInput(value.amount) : "",
       description: value?.description ?? "",
       categoryId: value?.categoryId ?? "",
-      accountId:
-        value?.accountId ?? data.accounts.find((a) => a.active)?.id ?? "",
+      accountId: value?.accountId ?? "",
       destinationAccountId: value?.destinationAccountId ?? "",
       occurredAt: value ? localDateTime(value.occurredAt) : localDateTime(),
       notes: value?.notes ?? "",
@@ -232,6 +242,51 @@ function TransactionForm({
   const kind = useWatch({ control: form.control, name: "kind" }),
     origin = useWatch({ control: form.control, name: "accountId" }),
     errors = form.formState.errors;
+  const draft = useWatch({ control: form.control });
+  const ready =
+    transactionSchema.safeParse(draft).success &&
+    data.accounts.some(
+      (a) =>
+        a.id === draft.accountId && (a.active || a.id === value?.accountId),
+    ) &&
+    (kind === "transfer"
+      ? data.accounts.some(
+          (a) =>
+            a.id === draft.destinationAccountId &&
+            (a.active || a.id === value?.destinationAccountId),
+        )
+      : data.categories.some(
+          (c) => c.id === draft.categoryId && c.kind === kind,
+        ));
+  function interpret(text: string, reinterpret = false) {
+    const result = interpretQuickEntry(text, data.accounts, data.categories);
+    const current = form.getValues();
+    const next = mergeQuickDraft(
+      {
+        ...current,
+        categoryId: current.categoryId ?? "",
+        destinationAccountId: current.destinationAccountId ?? "",
+      },
+      result,
+      manual.current,
+      data.accounts,
+      data.categories,
+      reinterpret,
+    );
+    if (reinterpret) manual.current = {};
+    for (const key of Object.keys(next) as Array<keyof QuickDraft>) {
+      // Inferred values do not mark a field as manually edited.
+      if (
+        reinterpret ||
+        !manual.current[key] ||
+        next[key] !== form.getValues(key)
+      ) {
+        if (key === "kind")
+          form.setValue(key, next.kind, { shouldValidate: true });
+        else form.setValue(key, next[key], { shouldValidate: true });
+      }
+    }
+  }
   const activeAccounts = data.accounts.filter(
     (a) =>
       a.active ||
@@ -271,8 +326,54 @@ function TransactionForm({
           save("transactions", form.getValues(), value?.id),
         )}
         className="finance-form"
+        onChange={(event) => {
+          const name = (event.target as unknown as HTMLInputElement)
+            .name as keyof QuickDraft;
+          if (
+            [
+              "kind",
+              "amount",
+              "description",
+              "accountId",
+              "categoryId",
+              "destinationAccountId",
+              "occurredAt",
+            ].includes(name)
+          )
+            manual.current[name] = true;
+        }}
         noValidate
       >
+        {!value && (
+          <div className="quick-entry">
+            <Field label="Lançamento rápido (opcional)">
+              <textarea
+                value={quickText}
+                placeholder="Ex.: Gastei 29,3"
+                maxLength={500}
+                rows={2}
+                onChange={(event) => {
+                  setQuickText(event.target.value);
+                  interpret(event.target.value);
+                }}
+              />
+            </Field>
+            <p className="field-hint" role="status">
+              Revise os campos abaixo. Conta e categoria só são preenchidas
+              quando identificadas pelo nome; suas escolhas manuais são
+              preservadas.
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              disabled={!quickText.trim()}
+              onClick={() => interpret(quickText, true)}
+            >
+              Interpretar novamente
+            </Button>
+          </div>
+        )}
         <div className="form-type-control">
           {(
             [
@@ -286,9 +387,20 @@ function TransactionForm({
               key={item.key}
               className={cn(kind === item.key && "active")}
               onClick={() => {
-                form.setValue("kind", item.key);
-                form.setValue("categoryId", "");
-                form.setValue("destinationAccountId", "");
+                manual.current.kind = true;
+                form.setValue("kind", item.key, { shouldValidate: true });
+                if (
+                  !data.categories.some(
+                    (c) =>
+                      c.id === form.getValues("categoryId") &&
+                      c.kind === item.key,
+                  )
+                )
+                  form.setValue("categoryId", "", { shouldValidate: true });
+                if (item.key !== "transfer")
+                  form.setValue("destinationAccountId", "", {
+                    shouldValidate: true,
+                  });
               }}
             >
               <item.icon size={16} />
@@ -296,6 +408,7 @@ function TransactionForm({
             </button>
           ))}
         </div>
+        {errors.kind && <p className="field-error">{errors.kind.message}</p>}
         <Field
           label="Valor"
           error={errors.amount?.message}
@@ -321,7 +434,7 @@ function TransactionForm({
             />
           </div>
         </Field>
-        <Field label="Descrição" error={errors.description?.message}>
+        <Field label="Descrição (opcional)" error={errors.description?.message}>
           <input
             {...form.register("description")}
             placeholder={
@@ -405,6 +518,7 @@ function TransactionForm({
         )}
         <SaveFooter
           busy={busy}
+          disabled={!ready}
           error={error}
           label={value ? "Salvar alterações" : "Confirmar movimentação"}
         >

@@ -12,17 +12,24 @@ export function TransactionCard({
 }) {
   const { data, openTransaction } = useFinance();
   const category = data.categories.find((c) => c.id === t.categoryId);
+  const title =
+    t.description ||
+    (t.kind === "income"
+      ? "Receita"
+      : t.kind === "expense"
+        ? "Despesa"
+        : "Transferência");
   return (
     <button
       className="transaction-card"
       onClick={() => openTransaction(t.kind, t)}
-      aria-label={`Editar ${t.description}, ${money(t.amount)}`}
+      aria-label={`Editar ${title}, ${money(t.amount)}`}
     >
       <span className={`transaction-icon ${t.kind}`}>
         <Icon name={category?.icon ?? t.kind} size={21} />
       </span>
       <span className="transaction-info">
-        <strong>{t.description}</strong>
+        <strong>{title}</strong>
         <small>{dateLabel(t.occurredAt, true)}</small>
       </span>
       <span className={`transaction-amount ${t.kind}`}>

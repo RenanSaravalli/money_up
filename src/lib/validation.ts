@@ -25,9 +25,15 @@ const name = z.string().trim().min(2, "Use pelo menos 2 caracteres.").max(80);
 export const transactionSchema = z
   .object({
     id: z.uuid(),
-    kind: z.enum(["income", "expense", "transfer"]),
+    kind: z
+      .enum(["income", "expense", "transfer", ""])
+      .pipe(
+        z.enum(["income", "expense", "transfer"], {
+          error: "Selecione o tipo de movimentação.",
+        }),
+      ),
     amount: positiveAmount,
-    description: name,
+    description: z.string().trim().max(80),
     categoryId: optionalId,
     accountId: z.uuid("Selecione uma conta."),
     destinationAccountId: optionalId,

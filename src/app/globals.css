@@ -37,6 +37,17 @@
   --red: #f292a2;
   color-scheme: dark;
 }
+:root[data-theme="light"] {
+  --background: #f4f7fc;
+  --foreground: #172033;
+  --muted-foreground: #65728a;
+  --border: #16315e14;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --green: #1b8a68;
+  --red: #c84f67;
+  color-scheme: light;
+}
 * {
   box-sizing: border-box;
 }
@@ -2055,6 +2066,75 @@ strong {
   flex-direction: column;
   gap: 18px;
 }
+.profile-theme-section {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding-top: 2px;
+}
+.profile-theme-heading > span {
+  display: block;
+  color: #9aa9c3;
+  font-size: 10px;
+}
+.profile-theme-heading small {
+  display: block;
+  color: #667994;
+  font-size: 9px;
+  line-height: 1.6;
+  margin-top: 5px;
+}
+.theme-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+.theme-option {
+  min-width: 0;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  border-radius: 13px;
+  border: 1px solid #ffffff0b;
+  background: #0d1320a8;
+  color: #aab6ce;
+  text-align: left;
+  font-size: 11px;
+}
+.theme-option:hover {
+  border-color: #4c80dc35;
+  background: #14223a;
+}
+.theme-option.active {
+  border-color: #4c87ed66;
+  background: #1d376366;
+  color: #dce9ff;
+}
+.theme-option-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  color: #79a6f4;
+  background: #2d57904d;
+}
+.theme-option > span:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+.theme-option small {
+  display: block;
+  color: #687b99;
+  font-size: 8px;
+  margin-top: 4px;
+}
+.theme-option-check {
+  color: #70a2ff;
+}
 .form-field {
   display: flex;
   flex-direction: column;
@@ -3584,5 +3664,404 @@ strong {
   }
   .chart-accessible-controls button {
     font-size: 10px;
+  }
+}
+
+/* Light appearance is intentionally selected by the user from the profile. */
+:root[data-theme="light"],
+:root[data-theme="light"] body {
+  background: #f4f7fc;
+}
+:root[data-theme="light"] body {
+  color: #172033;
+}
+:root[data-theme="light"] .app-frame {
+  background:
+    radial-gradient(ellipse at 35% -15%, #cfe0ff8c, transparent 52%), #f4f7fc;
+}
+:root[data-theme="light"] .sidebar {
+  background: #ffffff;
+  border-color: #19345e12;
+  box-shadow: 12px 0 35px #224f8a08;
+}
+:root[data-theme="light"] .sidebar-caption,
+:root[data-theme="light"] .sidebar-section-label,
+:root[data-theme="light"] .eyebrow {
+  color: #6f7d94;
+}
+:root[data-theme="light"] .sidebar-link {
+  color: #65728a;
+}
+:root[data-theme="light"] .sidebar-link:hover {
+  color: #1d3152;
+  background: #edf3fc;
+}
+:root[data-theme="light"] .sidebar-link.active {
+  color: #2866cf;
+  background: linear-gradient(100deg, #e8f0ff, #f3f7ff);
+  border-color: #3679e928;
+}
+:root[data-theme="light"] .nav-divider,
+:root[data-theme="light"] .profile-row,
+:root[data-theme="light"] .desktop-topbar,
+:root[data-theme="light"] .summary-result,
+:root[data-theme="light"] .history-tabs,
+:root[data-theme="light"] .account-detail-balance,
+:root[data-theme="light"] .amount-input-wrap {
+  border-color: #17345f14;
+}
+:root[data-theme="light"] .sidebar-note,
+:root[data-theme="light"] .logout-link,
+:root[data-theme="light"] .desktop-topbar,
+:root[data-theme="light"] .connection-status {
+  color: #66758d;
+}
+:root[data-theme="light"] .sidebar-note small,
+:root[data-theme="light"] .profile-row small {
+  color: #79869b;
+}
+:root[data-theme="light"] .circle-button {
+  color: #405575;
+  background: #ffffff;
+  border-color: #17345f12;
+  box-shadow: 0 5px 18px #1c4a8510;
+}
+:root[data-theme="light"] .circle-button:hover {
+  background: #edf3ff;
+}
+:root[data-theme="light"] .nav-capsule {
+  background: linear-gradient(145deg, #ffffff, #eef3fb);
+  border-color: #19345e18;
+  box-shadow:
+    inset 0 1px 1px #ffffff,
+    0 8px 28px #173d7825;
+}
+:root[data-theme="light"] .bottom-link {
+  color: #6a7890;
+}
+:root[data-theme="light"] .bottom-navigation {
+  filter: drop-shadow(0 5px 22px #17437720);
+}
+:root[data-theme="light"] .greeting small,
+:root[data-theme="light"] .balance-label,
+:root[data-theme="light"] .balance-change,
+:root[data-theme="light"] .balance-change-label,
+:root[data-theme="light"] .month-label,
+:root[data-theme="light"] .summary-row > div > span,
+:root[data-theme="light"] .summary-result > span,
+:root[data-theme="light"] .transaction-info small,
+:root[data-theme="light"] .section-heading > a,
+:root[data-theme="light"] .field-hint,
+:root[data-theme="light"] .quiet-message {
+  color: #66758e;
+}
+:root[data-theme="light"] .quick-actions > button {
+  color: #34445f;
+}
+:root[data-theme="light"] .quick-action-icon {
+  color: #2d5f9f;
+  background: linear-gradient(145deg, #ffffff, #e8effa);
+  border-color: #17345f14;
+  box-shadow: 0 6px 18px #1c4b8714;
+}
+:root[data-theme="light"] .quick-actions > button:hover .quick-action-icon {
+  background: linear-gradient(145deg, #f7faff, #dce8fa);
+  border-color: #4b80dd45;
+}
+:root[data-theme="light"] .transaction-card,
+:root[data-theme="light"] .category-expense-card,
+:root[data-theme="light"] .account-detail-card {
+  background: linear-gradient(120deg, #ffffff, #f5f8fd);
+  border-color: #17345f14;
+  box-shadow: 0 6px 18px #173c7210;
+}
+:root[data-theme="light"] .transaction-card:hover {
+  background: #edf4ff;
+  border-color: #316fce2e;
+}
+:root[data-theme="light"] .transaction-icon,
+:root[data-theme="light"] .category-preview-icon {
+  color: #40597d;
+  background: #eaf0f9;
+  border-color: #17345f0d;
+}
+:root[data-theme="light"] .transaction-amount.income {
+  color: #167b5b;
+}
+:root[data-theme="light"] .transaction-amount.transfer {
+  color: #356bb8;
+}
+:root[data-theme="light"] .empty-transactions,
+:root[data-theme="light"] .statistics-empty {
+  background: linear-gradient(145deg, #ffffff, #f3f7fc);
+  border-color: #17345f12;
+}
+:root[data-theme="light"] .empty-transactions p,
+:root[data-theme="light"] .statistics-empty p,
+:root[data-theme="light"] .category-summary-empty small,
+:root[data-theme="light"] .new-account-tile p,
+:root[data-theme="light"] .new-card-tile p,
+:root[data-theme="light"] .credit-scope-note p {
+  color: #667891;
+}
+:root[data-theme="light"] .empty-orbit > svg:nth-child(3) {
+  background: #f4f7fc;
+}
+:root[data-theme="light"] .count-label,
+:root[data-theme="light"] .category-track {
+  background: #17345f0b;
+}
+:root[data-theme="light"] .add-account-card,
+:root[data-theme="light"] .new-account-tile,
+:root[data-theme="light"] .new-card-tile {
+  background: #f7faff;
+  border-color: #4a75b334;
+}
+:root[data-theme="light"] .add-account-card > span:nth-child(2),
+:root[data-theme="light"] .new-account-tile h3,
+:root[data-theme="light"] .new-card-tile h3,
+:root[data-theme="light"] .statistics-empty h3,
+:root[data-theme="light"] .no-results h3 {
+  color: #334865;
+}
+:root[data-theme="light"] .add-account-card small,
+:root[data-theme="light"] .account-mini > div > span,
+:root[data-theme="light"] .category-preview > div,
+:root[data-theme="light"] .category-preview strong {
+  color: #61728b;
+}
+:root[data-theme="light"] .account-mini,
+:root[data-theme="light"] .summary-panel,
+:root[data-theme="light"] .category-summary,
+:root[data-theme="light"] .reserve-panel,
+:root[data-theme="light"] .credit-scope-note {
+  background: linear-gradient(150deg, #ffffff, #f1f5fb);
+  border-color: #17345f13;
+  box-shadow: 0 6px 20px #173c720c;
+}
+:root[data-theme="light"] .summary-icon {
+  background: #e5f5ee;
+  color: #1f8a67;
+}
+:root[data-theme="light"] .summary-icon.expense {
+  background: #f9e9ed;
+  color: #b64e65;
+}
+:root[data-theme="light"] .summary-result strong,
+:root[data-theme="light"] .reserve-panel > div > span,
+:root[data-theme="light"] .reserve-panel strong {
+  color: #315d9d;
+}
+:root[data-theme="light"] .setup-banner,
+:root[data-theme="light"] .history-summary,
+:root[data-theme="light"] .filters-panel,
+:root[data-theme="light"] .form-setup-note {
+  background: linear-gradient(110deg, #edf4ff, #f8faff);
+  border-color: #3f6eaf28;
+  color: #42628e;
+}
+:root[data-theme="light"] .search-field,
+:root[data-theme="light"] .filter-button {
+  background: #ffffff;
+  border-color: #17345f18;
+  color: #61708a;
+}
+:root[data-theme="light"] .search-field input {
+  color: #1c2b42;
+}
+:root[data-theme="light"] .filter-button.active,
+:root[data-theme="light"] .type-tabs button.active {
+  background: #e8f1ff;
+  color: #275fae;
+}
+:root[data-theme="light"] .filters-panel input,
+:root[data-theme="light"] .filters-panel select {
+  background: #ffffff;
+  border-color: #17345f18;
+  color: #253650;
+  color-scheme: light;
+}
+:root[data-theme="light"] .segmented-control {
+  background: #e7edf6;
+  border-color: #17345f0d;
+}
+:root[data-theme="light"] .segmented-control button {
+  color: #5e6d84;
+}
+:root[data-theme="light"] .segmented-control button.active {
+  color: #ffffff;
+}
+:root[data-theme="light"] .chart-card {
+  background: linear-gradient(150deg, #ffffff, #edf3fb);
+  border-color: #17345f12;
+  box-shadow: 0 8px 24px #173c7210;
+}
+:root[data-theme="light"] .chart-empty-overlay {
+  background: linear-gradient(180deg, #f5f8fc00, #f1f5fbdd 48%, #f1f5fb55);
+  color: #526680;
+}
+:root[data-theme="light"] .chart-empty-overlay > span {
+  text-shadow: none;
+}
+:root[data-theme="light"] .chart-accessible-controls button:focus-visible {
+  background: #dce9ff;
+  color: #214e91;
+}
+:root[data-theme="light"] .period-pill,
+:root[data-theme="light"] .empty-period {
+  color: #50647f;
+  background: #edf2f9;
+  border-color: #17345f12;
+}
+:root[data-theme="light"] .accounts-overview {
+  color: #193055;
+  background:
+    radial-gradient(ellipse at 90% 10%, #b8d1ff88, transparent 65%),
+    linear-gradient(120deg, #e9f2ff, #f8fbff);
+  border-color: #4778bd28;
+}
+:root[data-theme="light"] .accounts-overview > div:first-child > span,
+:root[data-theme="light"] .accounts-overview small,
+:root[data-theme="light"] .accounts-overview-footer > span,
+:root[data-theme="light"] .account-type,
+:root[data-theme="light"] .account-detail-balance > span {
+  color: #607590;
+}
+:root[data-theme="light"] .accounts-overview-footer {
+  border-color: #17345f16;
+}
+:root[data-theme="light"] .accounts-overview-footer strong,
+:root[data-theme="light"] .accounts-overview-footer button {
+  color: #285c9f;
+}
+:root[data-theme="light"] .category-chips button {
+  color: #52647e;
+  background: #ffffff;
+  border-color: #17345f15;
+}
+:root[data-theme="light"] .cards-intro h2 > span,
+:root[data-theme="light"] .cards-intro p,
+:root[data-theme="light"] .goals-page > p,
+:root[data-theme="light"] .goal-status,
+:root[data-theme="light"] .goals-page > small {
+  color: #5c718f;
+}
+:root[data-theme="light"] .bank-card {
+  color: #eef4ff;
+  box-shadow: 0 10px 28px #15376525;
+}
+:root[data-theme="light"] .card-empty-icon > span {
+  border-color: #f7faff;
+}
+:root[data-theme="light"] .goals-orbit > div {
+  background: linear-gradient(130deg, #dbe9ff, #f3f7fd);
+  color: #3977d4;
+}
+:root[data-theme="light"] .dialog-overlay {
+  background: #13213a80;
+}
+:root[data-theme="light"] .dialog-content {
+  color: #192841;
+  background: linear-gradient(155deg, #ffffff, #f3f7fc 70%);
+  border-color: #17345f18;
+  box-shadow: 0 30px 90px #1b3b6a2b;
+  scrollbar-color: #a7b8d0 transparent;
+}
+:root[data-theme="light"] .dialog-close {
+  color: #52657f;
+  background: #e9eff7;
+}
+:root[data-theme="light"] .dialog-description,
+:root[data-theme="light"] .form-field > span:first-child,
+:root[data-theme="light"] .profile-theme-heading > span {
+  color: #61718a;
+}
+:root[data-theme="light"] .form-field input,
+:root[data-theme="light"] .form-field select,
+:root[data-theme="light"] .form-field textarea {
+  color: #1c2a40;
+  background: #ffffff;
+  border-color: #17345f1b;
+  color-scheme: light;
+}
+:root[data-theme="light"] .form-field input::placeholder,
+:root[data-theme="light"] .form-field textarea::placeholder {
+  color: #8a97a9;
+}
+:root[data-theme="light"] .form-type-control {
+  background: #e8eef7;
+}
+:root[data-theme="light"] .form-type-control > button {
+  color: #5d6d85;
+}
+:root[data-theme="light"] .form-type-control > button.active {
+  color: #285fae;
+  background: #ffffff;
+  box-shadow: 0 2px 8px #173c7213;
+}
+:root[data-theme="light"] .button-secondary {
+  color: #2e415e;
+  background: #e7edf6;
+  border-color: #17345f0d;
+}
+:root[data-theme="light"] .button-ghost {
+  color: #52647e;
+}
+:root[data-theme="light"] .checkbox-field {
+  color: #40536f;
+}
+:root[data-theme="light"] .profile-theme-heading small,
+:root[data-theme="light"] .theme-option small {
+  color: #75839a;
+}
+:root[data-theme="light"] .theme-option {
+  color: #43546e;
+  background: #ffffff;
+  border-color: #17345f18;
+}
+:root[data-theme="light"] .theme-option:hover {
+  background: #f1f6fd;
+  border-color: #4c80dc44;
+}
+:root[data-theme="light"] .theme-option.active {
+  color: #214e91;
+  background: #eaf2ff;
+  border-color: #3a78dd66;
+}
+:root[data-theme="light"] .theme-option-icon {
+  color: #2e69bf;
+  background: #dfeaff;
+}
+:root[data-theme="light"] .login-page {
+  color: #17233a;
+  background:
+    radial-gradient(ellipse at 10% 0, #b9d2ff88, transparent 65%), #f4f7fc;
+}
+:root[data-theme="light"] .login-art {
+  border-color: #17345f12;
+}
+:root[data-theme="light"] .login-art-title > p,
+:root[data-theme="light"] .login-art-footer,
+:root[data-theme="light"] .login-form-container > p,
+:root[data-theme="light"] .login-private-note {
+  color: #587091;
+}
+:root[data-theme="light"] .login-setup-message {
+  color: #35577f;
+  background: #e5efff;
+  border-color: #4d78b734;
+}
+:root[data-theme="light"] .login-setup-message code {
+  color: #254f8a;
+}
+:root[data-theme="light"] .skeleton {
+  background: linear-gradient(90deg, #e7edf5, #f7f9fc, #e7edf5);
+  background-size: 200% 100%;
+}
+
+@media (max-width: 760px) {
+  :root[data-theme="light"] .login-page {
+    background:
+      radial-gradient(ellipse at 50% -15%, #bad4ff99, transparent 65%), #f4f7fc;
   }
 }

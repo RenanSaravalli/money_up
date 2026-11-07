@@ -1,7 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Toaster } from "sonner";
 import { PwaRegistration } from "@/components/pwa-registration";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+
+const themeScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem("fluxo-theme");
+    var cookie = document.cookie.match(/(?:^|; )fluxo-theme=([^;]*)/);
+    var theme = stored === "light" || (!stored && cookie && decodeURIComponent(cookie[1]) === "light") ? "light" : "dark";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch (_) {}
+})();`;
+
 export const metadata: Metadata = {
   title: {
     default: "Fluxo — Suas finanças, em movimento",
@@ -23,7 +35,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: "#102B70",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
 export default function RootLayout({
   children,
@@ -31,10 +43,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
-        {children}
-        <Toaster theme="dark" position="top-center" richColors closeButton />
+        <ThemeProvider>{children}</ThemeProvider>
         <PwaRegistration />
       </body>
     </html>

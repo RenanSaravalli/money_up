@@ -18,6 +18,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useFinance } from "@/components/finance-provider";
+import { ThemeSelector } from "@/components/theme-provider";
 import {
   Dialog,
   DialogContent,
@@ -862,6 +863,7 @@ function ProfileForm() {
             required
           />
         </Field>
+        <ThemeSelector />
         <Button disabled={busy} type="submit">
           {busy ? "Salvando…" : "Salvar nome"}
         </Button>

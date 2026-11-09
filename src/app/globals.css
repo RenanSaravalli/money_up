@@ -2754,7 +2754,7 @@ strong {
   }
   .bottom-navigation {
     left: 50%;
-    bottom: calc(17px + env(safe-area-inset-bottom));
+    bottom: max(4px, env(safe-area-inset-bottom, 0px));
     gap: 7px;
     width: calc(100% - 48px);
     max-width: 390px;
